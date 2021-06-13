@@ -13,6 +13,10 @@ const userSchema = new Schema({
         type:String,
         required: true
     },
+    resetToken: {
+        type:String,
+       required:false
+    },
     roles: [{
         ref: "Role",
         type: Schema.Types.ObjectId

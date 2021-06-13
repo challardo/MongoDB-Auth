@@ -5,6 +5,7 @@ import Tarjeta from '../models/tarjetaModel'
 import * as tarjetaController from '../controllers/tarjetas.controller'
 import * as authController from '../controllers/auth.controller'
 import {authJwt} from '../middlewares'
+import userModel from '../models/userModel';
 
 const router = express.Router();
 module.exports = router;
@@ -51,6 +52,32 @@ router.get('/delete/:tarjetaId',[authJwt.verifyToken, authJwt.isAdmin ], async (
 
 router.get('/set-cookies', authController.cookieTest)
 router.get('/logout', authController.logout_get);
+
+
+
+router.get('/forgotPassword', (req,res) => {
+    res.render('pages/forgotPassword')
+})
+router.get('/resetPassword/:resetToken', async (req,res) => {
+  //  console.log("token id" +req.params.resetToken)
+    const resetToken = await userModel.findOne({resetToken:req.params.resetToken});   
+    res.render('pages/resetPassword', {resetToken})
+    });
+
+
+
+router.post('/forgotPassword', authController.forgotPassword)
+router.put('/forgotPassword', authController.forgotPassword)
+router.put('/resetPassword', authController.createNewPassword)
+router.get('/emailsent', (req,res) => {
+    res.render('pages/emailsent')
+})
+router.post('/resetPassword', authController.createNewPassword)
+
+
+//router.post('/resetPassword', authController.createNewPassword)
+
+//router.post('/changePassword', authController.changePassword)
 
 
 
