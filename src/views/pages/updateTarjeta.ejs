@@ -1,0 +1,27 @@
+<h1> Edit tarjetas digitales</h1>
+
+<form action="/edit/<%= tarjeta._id %>" method="POST"  style=" margin-bottom: 100px;">
+  <div class="form-group" > 
+    <label for="POST-name">titulo:</label>
+    <input id="POST-name" class="form-control" type="text" name="titulo" value="<%- tarjeta.titulo%>">
+
+    <label for="POST-category">cabecera:</label>
+    <input id="POST-category" class="form-control" type="text" name="cabecera"  value="<%- tarjeta.cabecera%>">
+    
+    <label for="POST-price">celular:</label>
+    <input id="POST-price" class="form-control" type="text" name="celular"  value="<%- tarjeta.celular%>">
+
+    <label for="POST-imgURL">direccion:</label>
+    <input id="POST-imgURL" class="form-control" type="text" name="direccion"  value="<%- tarjeta.direccion%>">
+
+    <label for="POST-imgURL">correo:</label>
+    <input id="POST-imgURL" class="form-control" type="text" name="correo"  value="<%- tarjeta.correo%>">
+
+    
+  </div>
+    
+
+    <input type="submit" class="btn btn-success" value="Save">
+    <a href="/dashboard"  class="btn btn-primary"> back</a>
+  </form>
+

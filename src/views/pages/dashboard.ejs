@@ -1,0 +1,36 @@
+<h1 class="display-4"> dashboard page</h1>
+
+<div>
+<h1> editor de tarjetas: </h1>
+ <a href="/createTarjeta" class="btn btn-primary"> Crear tarjeta</a>
+</div>
+
+<div style="margin: 50px 0px 50px 0px;">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">id</th>
+        <th scope="col">titulo</th>
+        <th scope="col">cabecera</th>
+        <th scope="col">celular</th>
+        <th scope="col">direccion</th>
+        <th scope="col">correo</th>
+      </tr>
+    </thead>
+    <tbody>
+      <%for(var i=0; i<tarjetas.length; i++) {%>
+      <tr>
+        <td><%=tarjetas[i]._id%></td>
+        <td><%=tarjetas[i].titulo%></td>
+        <td><%=tarjetas[i].cabecera%></td>
+        <td><%=tarjetas[i].celular%></td>
+        <td><%=tarjetas[i].direccion%></td>
+        <td><%=tarjetas[i].correo%></td>
+        <td><a href="/edit/<%= tarjetas[i]._id %>" class="btn btn-warning"> edit</a></td>
+        <td><a href="/delete/<%= tarjetas[i]._id %>" class="btn btn-danger"> delete</a></td>
+      </tr>
+      <%}%>
+    </tbody>
+  </table>
+</div>
+  

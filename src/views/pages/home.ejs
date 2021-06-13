@@ -1,0 +1,36 @@
+
+
+
+
+<div class="container" style="margin: 0px 0px 500px 0px;">
+  <h1 class="display-4"> Pagina de home</h1>
+
+  <h1> Contenido de tarjetas: </h1>
+ 
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">id</th>
+        <th scope="col">titulo</th>
+        <th scope="col">cabecera</th>
+        <th scope="col">celular</th>
+        <th scope="col">direccion</th>
+        <th scope="col">correo</th>
+      </tr>
+    </thead>
+    <tbody>
+      <%for(var i=0; i<tarjetas.length; i++) {%>
+      <tr>
+        <td><%=tarjetas[i]._id%></td>
+        <td><%=tarjetas[i].titulo%></td>
+        <td><%=tarjetas[i].cabecera%></td>
+        <td><%=tarjetas[i].celular%></td>
+        <td><%=tarjetas[i].direccion%></td>
+        <td><%=tarjetas[i].correo%></td>
+      </tr>
+      <%}%>
+    </tbody>
+  </table>
+</div>
+
+
