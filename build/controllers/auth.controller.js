@@ -5,7 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.logout_get = exports.cookieTest = exports.postLogin = exports.postRegister = exports.login = exports.register = void 0;
+exports.createNewPassword = exports.forgotPassword = exports.logout_get = exports.cookieTest = exports.postLogin = exports.postRegister = exports.login = exports.register = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -22,6 +22,10 @@ var _config = _interopRequireDefault(require("../config"));
 var _morgan = require("morgan");
 
 var _cookieParser = _interopRequireDefault(require("cookie-parser"));
+
+var _mailer = require("../mailer");
+
+var lodash = require('lodash');
 
 var register = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(req, res) {
@@ -276,3 +280,198 @@ var logout_get = /*#__PURE__*/function () {
 }();
 
 exports.logout_get = logout_get;
+
+var forgotPassword = /*#__PURE__*/function () {
+  var _ref7 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee7(req, res) {
+    var email, userFound, token, verificationLink, savedToken;
+    return _regenerator["default"].wrap(function _callee7$(_context7) {
+      while (1) {
+        switch (_context7.prev = _context7.next) {
+          case 0:
+            email = req.body.email;
+
+            if (email) {
+              _context7.next = 3;
+              break;
+            }
+
+            return _context7.abrupt("return", res.status(400).json({
+              message: 'user is required'
+            }));
+
+          case 3:
+            _context7.next = 5;
+            return _userModel["default"].findOne({
+              email: email
+            });
+
+          case 5:
+            userFound = _context7.sent;
+
+            if (userFound) {
+              _context7.next = 8;
+              break;
+            }
+
+            return _context7.abrupt("return", res.status(400).json({
+              message: "user Not found"
+            }));
+
+          case 8:
+            token = _jsonwebtoken["default"].sign({
+              id: userFound._id,
+              email: userFound.email
+            }, _config["default"].RESET_SECRET, {
+              expiresIn: '10m'
+            });
+            console.log('Usuario encontrado: ' + userFound);
+            verificationLink = req.protocol + "://" + req.get('host') + '/resetPassword/' + token;
+            console.log('verification link: ' + verificationLink); //  console.log('verification token: ' +token)
+
+            _context7.next = 14;
+            return userFound.updateOne({
+              resetToken: token
+            }, function (err, success) {
+              if (err) {
+                return res.status(400).json({
+                  error: 'reset password link error'
+                });
+              } // send mail with defined transport object
+
+
+              // send mail with defined transport object
+              var info = _mailer.transporter.sendMail({
+                from: '"Forgot Password 👻" <MiSandbox.correo@gmail.com>',
+                // sender address
+                to: userFound.email,
+                // list of receivers
+                subject: "Reset password",
+                // Subject line
+                text: "Este es el link para resetear tu password",
+                // plain text body
+                html: '<b>Haz click aqui:</b>  <a href="' + verificationLink + '"> Change password </a>' // html body
+
+              }, function (err, info) {
+                console.log(info.envelope);
+                console.log(info.messageId);
+              }); // return res.json({success:'email sent'})
+
+            });
+
+          case 14:
+            savedToken = _context7.sent;
+            console.log('verification token: ' + token);
+            res.redirect('/emailsent');
+
+          case 17:
+          case "end":
+            return _context7.stop();
+        }
+      }
+    }, _callee7);
+  }));
+
+  return function forgotPassword(_x13, _x14) {
+    return _ref7.apply(this, arguments);
+  };
+}();
+
+exports.forgotPassword = forgotPassword;
+
+var createNewPassword = /*#__PURE__*/function () {
+  var _ref8 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee9(req, res) {
+    var _req$body2, resetToken, newPass;
+
+    return _regenerator["default"].wrap(function _callee9$(_context9) {
+      while (1) {
+        switch (_context9.prev = _context9.next) {
+          case 0:
+            _req$body2 = req.body, resetToken = _req$body2.resetToken, newPass = _req$body2.newPass;
+
+            if (!resetToken) {
+              _context9.next = 6;
+              break;
+            }
+
+            _jsonwebtoken["default"].verify(resetToken, _config["default"].RESET_SECRET, function (error, decodedToken) {
+              if (error) {
+                return res.status(401).json({
+                  error: "incorrect link or it has expired"
+                });
+              }
+            });
+
+            _userModel["default"].findOne({
+              resetToken: resetToken
+            }, /*#__PURE__*/function () {
+              var _ref9 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee8(err, user) {
+                var obj;
+                return _regenerator["default"].wrap(function _callee8$(_context8) {
+                  while (1) {
+                    switch (_context8.prev = _context8.next) {
+                      case 0:
+                        if (!(err || !user)) {
+                          _context8.next = 2;
+                          break;
+                        }
+
+                        return _context8.abrupt("return", res.status(400).json({
+                          error: 'user with this token does not exist'
+                        }));
+
+                      case 2:
+                        _context8.next = 4;
+                        return _userModel["default"].encryptPassword(newPass);
+
+                      case 4:
+                        _context8.t0 = _context8.sent;
+                        obj = {
+                          password: _context8.t0,
+                          resetToken: ''
+                        };
+                        user = lodash.extend(user, obj);
+                        user.save(function (err, result) {
+                          if (err) {
+                            return res.status(400).json({
+                              error: 'reset password error'
+                            });
+                          } else {
+                            return res.status(200).redirect('/login');
+                          }
+                        });
+
+                      case 8:
+                      case "end":
+                        return _context8.stop();
+                    }
+                  }
+                }, _callee8);
+              }));
+
+              return function (_x17, _x18) {
+                return _ref9.apply(this, arguments);
+              };
+            }());
+
+            _context9.next = 7;
+            break;
+
+          case 6:
+            return _context9.abrupt("return", res.status(401).json({
+              error: "error reseting password"
+            }));
+
+          case 7:
+          case "end":
+            return _context9.stop();
+        }
+      }
+    }, _callee9);
+  }));
+
+  return function createNewPassword(_x15, _x16) {
+    return _ref8.apply(this, arguments);
+  };
+}();
+
+exports.createNewPassword = createNewPassword;

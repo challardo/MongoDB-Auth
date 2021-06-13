@@ -28,6 +28,10 @@ var userSchema = new _mongoose.Schema({
     type: String,
     required: true
   },
+  resetToken: {
+    type: String,
+    required: false
+  },
   roles: [{
     ref: "Role",
     type: _mongoose.Schema.Types.ObjectId
