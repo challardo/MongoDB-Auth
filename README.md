@@ -2,4 +2,4 @@
  test
 
 
-[Heroku deploy](https://mongodbtest612.herokuapp.com/register)
+[Heroku deploy](https://mongodbtest612.herokuapp.com)
