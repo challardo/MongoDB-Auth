@@ -7,6 +7,32 @@ import * as authController from '../controllers/auth.controller'
 import {authJwt} from '../middlewares'
 import userModel from '../models/userModel';
 
+
+const multer = require('multer');
+const storage = multer.diskStorage({
+    destination: function(req,file,cb){
+        cb(null, 'uploads/')
+    },
+    filename: function(req,file,cb){
+        cb(null, 'testImage' + file.originalname)
+    }
+});
+const fileFilter = (req, file,cb) =>{
+    //reject file 
+    if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png'){
+        cb(null,true);
+    }
+    else{
+        cb(null,false);
+    }
+  
+    //accept file
+
+    
+};
+//const upload = multer({dest: 'uploads/'})
+const upload = multer({storage: storage, limits:{fileSize: 1024*1024*5}, fileFilter: fileFilter})
+
 const router = express.Router();
 module.exports = router;
 //----------- autenticacion --------------
@@ -23,7 +49,7 @@ router.post('/register', authController.postRegister)
 router.get('/', tarjetaController.getTarjetas)
 
 router.get('/dashboard',[authJwt.verifyToken, authJwt.isAdmin ], tarjetaController.getTarjetasAdmin)
-router.post('/dashboard',[authJwt.verifyToken, authJwt.isAdmin ], tarjetaController.createTarjeta)
+router.post('/dashboard',[authJwt.verifyToken, authJwt.isAdmin, upload.single('tarjetaImage') ], tarjetaController.createTarjeta)
 
 router.get('/createTarjeta',[authJwt.verifyToken, authJwt.isAdmin ], (req, res) =>{
     res.render('pages/createTarjeta');
@@ -34,16 +60,7 @@ router.get('/edit/:tarjetaId',[authJwt.verifyToken, authJwt.isAdmin ], async (re
     res.render('pages/updateTarjeta', {tarjeta})
     });
 
-router.post('/edit/:tarjetaId',[authJwt.verifyToken, authJwt.isAdmin ], async (req,res) => {
-    try {   
-        const tarjeta = await Tarjeta.findByIdAndUpdate(req.params.tarjetaId, req.body, {
-        new:true
-    })   
-        res.redirect('/dashboard')
-        } catch (error) {
-        console.log(error)
-    }
-    });
+router.post('/edit/:tarjetaId',[authJwt.verifyToken, authJwt.isAdmin,upload.single('tarjetaImage') ], tarjetaController.updateTarjetaById);
 
 router.get('/delete/:tarjetaId',[authJwt.verifyToken, authJwt.isAdmin ], async (req,res) =>{
     const tarjeta = await Tarjeta.findByIdAndRemove(req.params.tarjetaId);

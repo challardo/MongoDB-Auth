@@ -93,7 +93,7 @@ var checkUser = function checkUser(req, res, next) {
                 console.log(err.message);
                 res.locals.user = null;
                 next();
-                _context2.next = 12;
+                _context2.next = 11;
                 break;
 
               case 6:
@@ -102,11 +102,11 @@ var checkUser = function checkUser(req, res, next) {
 
               case 8:
                 user = _context2.sent;
-                console.log(user);
+                //  console.log(user)
                 res.locals.user = user;
                 next();
 
-              case 12:
+              case 11:
               case "end":
                 return _context2.stop();
             }
@@ -147,33 +147,32 @@ var isModerator = /*#__PURE__*/function () {
 
           case 5:
             roles = _context3.sent;
-            console.log(roles);
             i = 0;
 
-          case 8:
+          case 7:
             if (!(i < roles.length)) {
-              _context3.next = 15;
+              _context3.next = 14;
               break;
             }
 
             if (!(roles[i].name === "moderator")) {
-              _context3.next = 12;
+              _context3.next = 11;
               break;
             }
 
             next();
             return _context3.abrupt("return");
 
-          case 12:
+          case 11:
             i++;
-            _context3.next = 8;
+            _context3.next = 7;
             break;
 
-          case 15:
+          case 14:
             console.log('require moderator role');
             return _context3.abrupt("return", res.redirect('/'));
 
-          case 17:
+          case 16:
           case "end":
             return _context3.stop();
         }
@@ -209,33 +208,32 @@ var isAdmin = /*#__PURE__*/function () {
 
           case 5:
             roles = _context4.sent;
-            console.log(roles);
             i = 0;
 
-          case 8:
+          case 7:
             if (!(i < roles.length)) {
-              _context4.next = 15;
+              _context4.next = 14;
               break;
             }
 
             if (!(roles[i].name === "admin")) {
-              _context4.next = 12;
+              _context4.next = 11;
               break;
             }
 
             next();
             return _context4.abrupt("return");
 
-          case 12:
+          case 11:
             i++;
-            _context4.next = 8;
+            _context4.next = 7;
             break;
 
-          case 15:
+          case 14:
             console.log('require admin role');
             return _context4.abrupt("return", res.redirect('/'));
 
-          case 17:
+          case 16:
           case "end":
             return _context4.stop();
         }

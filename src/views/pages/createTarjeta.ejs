@@ -1,7 +1,7 @@
 <div class="container">
 <h1> crear tarjetas</h1>
 </div>
-<form action="/dashboard" method="post" class="rounded" style=" margin-bottom: 100px;">
+<form action="/dashboard" method="post" class="rounded" style=" margin-bottom: 100px;" enctype="multipart/form-data">
   <div class="form-group" > 
     <label for="POST-name">titulo:</label>
     <input id="POST-name" class="form-control" type="text" name="titulo">
@@ -19,6 +19,10 @@
     <input id="POST-imgURL" class="form-control" type="text" name="correo">
 
     
+    
+    <label class="form-label" for="customFile">Tarjeta Image: </label>
+    <input type="file" class="form-control" id="customFile" name="tarjetaImage" />
+
   </div>
     <input type="submit" class="btn btn-success" value="Save">
     <a href="/dashboard" class="btn btn-primary"> back</a>

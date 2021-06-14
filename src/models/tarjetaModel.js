@@ -9,7 +9,7 @@ const tarjetaSchema = new Schema({
     celular: String,
     direccion: String,
     correo: String,
-    
+    tarjetaImage: String
 },
     {
         timeStamps: true,

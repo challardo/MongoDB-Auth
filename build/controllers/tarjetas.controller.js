@@ -13,22 +13,25 @@ var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/
 
 var _tarjetaModel = _interopRequireDefault(require("../models/tarjetaModel"));
 
+var multer = require('multer');
+
 var createTarjeta = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(req, res) {
-    var _req$body, titulo, cabecera, celular, direccion, correo, newTarjeta, TarjetaSaved;
+    var _req$body, titulo, cabecera, celular, direccion, correo, tarjetaImage, newTarjeta, TarjetaSaved;
 
     return _regenerator["default"].wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
             console.log(req.body);
-            _req$body = req.body, titulo = _req$body.titulo, cabecera = _req$body.cabecera, celular = _req$body.celular, direccion = _req$body.direccion, correo = _req$body.correo;
+            _req$body = req.body, titulo = _req$body.titulo, cabecera = _req$body.cabecera, celular = _req$body.celular, direccion = _req$body.direccion, correo = _req$body.correo, tarjetaImage = _req$body.tarjetaImage;
             newTarjeta = new _tarjetaModel["default"]({
               titulo: titulo,
               cabecera: cabecera,
               celular: celular,
               direccion: direccion,
-              correo: correo
+              correo: correo,
+              tarjetaImage: req.file.path
             });
             _context.next = 5;
             return newTarjeta.save();
@@ -149,37 +152,45 @@ exports.getTarjetaById = getTarjetaById;
 
 var updateTarjetaById = /*#__PURE__*/function () {
   var _ref5 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(req, res) {
-    var tarjeta;
+    var _req$body2, titulo, cabecera, celular, direccion, correo, tarjetaImage, newTarjeta, tarjeta;
+
     return _regenerator["default"].wrap(function _callee5$(_context5) {
       while (1) {
         switch (_context5.prev = _context5.next) {
           case 0:
             _context5.prev = 0;
-            _context5.next = 3;
-            return _tarjetaModel["default"].findByIdAndUpdate(req.params.tarjetaId, req.body, {
+            _req$body2 = req.body, titulo = _req$body2.titulo, cabecera = _req$body2.cabecera, celular = _req$body2.celular, direccion = _req$body2.direccion, correo = _req$body2.correo, tarjetaImage = _req$body2.tarjetaImage;
+            newTarjeta = {
+              titulo: titulo,
+              cabecera: cabecera,
+              celular: celular,
+              direccion: direccion,
+              correo: correo,
+              tarjetaImage: req.file.path
+            };
+            _context5.next = 5;
+            return _tarjetaModel["default"].findByIdAndUpdate(req.params.tarjetaId, newTarjeta, {
               "new": true
             });
 
-          case 3:
+          case 5:
             tarjeta = _context5.sent;
             console.log(tarjeta);
-            res.render('pages/updateTarjeta', {
-              tarjeta: tarjeta
-            });
-            _context5.next = 11;
+            res.status(201).redirect('/dashboard');
+            _context5.next = 13;
             break;
 
-          case 8:
-            _context5.prev = 8;
+          case 10:
+            _context5.prev = 10;
             _context5.t0 = _context5["catch"](0);
             console.log(_context5.t0);
 
-          case 11:
+          case 13:
           case "end":
             return _context5.stop();
         }
       }
-    }, _callee5, null, [[0, 8]]);
+    }, _callee5, null, [[0, 10]]);
   }));
 
   return function updateTarjetaById(_x9, _x10) {

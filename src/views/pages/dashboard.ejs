@@ -15,6 +15,7 @@
         <th scope="col">celular</th>
         <th scope="col">direccion</th>
         <th scope="col">correo</th>
+        <th scope="col">tarjeta Image</th>
       </tr>
     </thead>
     <tbody>
@@ -26,6 +27,7 @@
         <td><%=tarjetas[i].celular%></td>
         <td><%=tarjetas[i].direccion%></td>
         <td><%=tarjetas[i].correo%></td>
+        <td><%=tarjetas[i].tarjetaImage%></td>
         <td><a href="/edit/<%= tarjetas[i]._id %>" class="btn btn-warning"> edit</a></td>
         <td><a href="/delete/<%= tarjetas[i]._id %>" class="btn btn-danger"> delete</a></td>
       </tr>

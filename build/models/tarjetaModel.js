@@ -15,7 +15,8 @@ var tarjetaSchema = new _mongoose.Schema({
   cabecera: String,
   celular: String,
   direccion: String,
-  correo: String
+  correo: String,
+  tarjetaImage: String
 }, {
   timeStamps: true,
   versionKey: false

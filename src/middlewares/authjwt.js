@@ -34,7 +34,7 @@ export const checkUser = (req,res, next) =>{
             else{
                // console.log(UserId)
                 let user = await User.findById(decodedToken.id)
-                console.log(user)
+              //  console.log(user)
                 res.locals.user = user;
                 next();
             }
@@ -49,7 +49,7 @@ export const checkUser = (req,res, next) =>{
 export const isModerator = async(req,res,next) =>{
 const user =await User.findById(req.userId)
 const roles =await roleModel.find({_id: {$in: user.roles}})
-console.log(roles)
+//console.log(roles)
 for(let i=0; i<roles.length; i++){
     if(roles[i].name === "moderator"){
         next();
@@ -64,7 +64,7 @@ return res.redirect('/')
 export const isAdmin = async(req,res,next) => {
     const user =await User.findById(req.userId)
     const roles =await roleModel.find({_id: {$in: user.roles}})
-    console.log(roles)
+  //  console.log(roles)
     for(let i=0; i<roles.length; i++){
         if(roles[i].name === "admin"){
             next();

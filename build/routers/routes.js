@@ -27,6 +27,35 @@ var express = require('express');
 
 var path = require('path');
 
+var multer = require('multer');
+
+var storage = multer.diskStorage({
+  destination: function destination(req, file, cb) {
+    cb(null, 'uploads/');
+  },
+  filename: function filename(req, file, cb) {
+    cb(null, 'testImage' + file.originalname);
+  }
+});
+
+var fileFilter = function fileFilter(req, file, cb) {
+  //reject file 
+  if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  } //accept file
+
+}; //const upload = multer({dest: 'uploads/'})
+
+
+var upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 1024 * 1024 * 5
+  },
+  fileFilter: fileFilter
+});
 var router = express.Router();
 module.exports = router; //----------- autenticacion --------------
 
@@ -38,7 +67,7 @@ router.post('/register', authController.postRegister); //----------- Rutas de ta
 
 router.get('/', tarjetaController.getTarjetas);
 router.get('/dashboard', [_middlewares.authJwt.verifyToken, _middlewares.authJwt.isAdmin], tarjetaController.getTarjetasAdmin);
-router.post('/dashboard', [_middlewares.authJwt.verifyToken, _middlewares.authJwt.isAdmin], tarjetaController.createTarjeta);
+router.post('/dashboard', [_middlewares.authJwt.verifyToken, _middlewares.authJwt.isAdmin, upload.single('tarjetaImage')], tarjetaController.createTarjeta);
 router.get('/createTarjeta', [_middlewares.authJwt.verifyToken, _middlewares.authJwt.isAdmin], function (req, res) {
   res.render('pages/createTarjeta');
 });
@@ -70,55 +99,55 @@ router.get('/edit/:tarjetaId', [_middlewares.authJwt.verifyToken, _middlewares.a
     return _ref.apply(this, arguments);
   };
 }());
-router.post('/edit/:tarjetaId', [_middlewares.authJwt.verifyToken, _middlewares.authJwt.isAdmin], /*#__PURE__*/function () {
+router.post('/edit/:tarjetaId', [_middlewares.authJwt.verifyToken, _middlewares.authJwt.isAdmin, upload.single('tarjetaImage')], tarjetaController.updateTarjetaById);
+router.get('/delete/:tarjetaId', [_middlewares.authJwt.verifyToken, _middlewares.authJwt.isAdmin], /*#__PURE__*/function () {
   var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(req, res) {
     var tarjeta;
     return _regenerator["default"].wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
-            _context2.prev = 0;
-            _context2.next = 3;
-            return _tarjetaModel["default"].findByIdAndUpdate(req.params.tarjetaId, req.body, {
-              "new": true
-            });
+            _context2.next = 2;
+            return _tarjetaModel["default"].findByIdAndRemove(req.params.tarjetaId);
 
-          case 3:
+          case 2:
             tarjeta = _context2.sent;
             res.redirect('/dashboard');
-            _context2.next = 10;
-            break;
 
-          case 7:
-            _context2.prev = 7;
-            _context2.t0 = _context2["catch"](0);
-            console.log(_context2.t0);
-
-          case 10:
+          case 4:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2, null, [[0, 7]]);
+    }, _callee2);
   }));
 
   return function (_x3, _x4) {
     return _ref2.apply(this, arguments);
   };
 }());
-router.get('/delete/:tarjetaId', [_middlewares.authJwt.verifyToken, _middlewares.authJwt.isAdmin], /*#__PURE__*/function () {
+router.get('/set-cookies', authController.cookieTest);
+router.get('/logout', authController.logout_get);
+router.get('/forgotPassword', function (req, res) {
+  res.render('pages/forgotPassword');
+});
+router.get('/resetPassword/:resetToken', /*#__PURE__*/function () {
   var _ref3 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(req, res) {
-    var tarjeta;
+    var resetToken;
     return _regenerator["default"].wrap(function _callee3$(_context3) {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
             _context3.next = 2;
-            return _tarjetaModel["default"].findByIdAndRemove(req.params.tarjetaId);
+            return _userModel["default"].findOne({
+              resetToken: req.params.resetToken
+            });
 
           case 2:
-            tarjeta = _context3.sent;
-            res.redirect('/dashboard');
+            resetToken = _context3.sent;
+            res.render('pages/resetPassword', {
+              resetToken: resetToken
+            });
 
           case 4:
           case "end":
@@ -130,41 +159,6 @@ router.get('/delete/:tarjetaId', [_middlewares.authJwt.verifyToken, _middlewares
 
   return function (_x5, _x6) {
     return _ref3.apply(this, arguments);
-  };
-}());
-router.get('/set-cookies', authController.cookieTest);
-router.get('/logout', authController.logout_get);
-router.get('/forgotPassword', function (req, res) {
-  res.render('pages/forgotPassword');
-});
-router.get('/resetPassword/:resetToken', /*#__PURE__*/function () {
-  var _ref4 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(req, res) {
-    var resetToken;
-    return _regenerator["default"].wrap(function _callee4$(_context4) {
-      while (1) {
-        switch (_context4.prev = _context4.next) {
-          case 0:
-            _context4.next = 2;
-            return _userModel["default"].findOne({
-              resetToken: req.params.resetToken
-            });
-
-          case 2:
-            resetToken = _context4.sent;
-            res.render('pages/resetPassword', {
-              resetToken: resetToken
-            });
-
-          case 4:
-          case "end":
-            return _context4.stop();
-        }
-      }
-    }, _callee4);
-  }));
-
-  return function (_x7, _x8) {
-    return _ref4.apply(this, arguments);
   };
 }());
 router.post('/forgotPassword', authController.forgotPassword);

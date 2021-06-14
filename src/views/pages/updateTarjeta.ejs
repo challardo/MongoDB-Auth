@@ -1,6 +1,6 @@
 <h1> Edit tarjetas digitales</h1>
 
-<form action="/edit/<%= tarjeta._id %>" method="POST"  style=" margin-bottom: 100px;">
+<form action="/edit/<%= tarjeta._id %>" method="POST"  style=" margin-bottom: 100px;" enctype="multipart/form-data">
   <div class="form-group" > 
     <label for="POST-name">titulo:</label>
     <input id="POST-name" class="form-control" type="text" name="titulo" value="<%- tarjeta.titulo%>">
@@ -16,6 +16,10 @@
 
     <label for="POST-imgURL">correo:</label>
     <input id="POST-imgURL" class="form-control" type="text" name="correo"  value="<%- tarjeta.correo%>">
+
+    
+    <label class="form-label" for="customFile">Tarjeta Image: </label>
+    <input type="file" class="form-control" id="customFile" name="tarjetaImage" value="<%- tarjeta.tarjetaImage%>" />
 
     
   </div>

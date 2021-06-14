@@ -1,10 +1,12 @@
 import Tarjeta from '../models/tarjetaModel'
+const multer = require('multer');
 
 export const createTarjeta = async (req,res) => {
 console.log(req.body);
 
-const {titulo,cabecera,celular,direccion,correo} = req.body
-const newTarjeta = new Tarjeta({titulo,cabecera,celular,direccion,correo})
+const {titulo,cabecera,celular,direccion,correo,tarjetaImage} = req.body
+
+const newTarjeta = new Tarjeta({titulo,cabecera,celular,direccion,correo,tarjetaImage:req.file.path})
 
 const TarjetaSaved = await newTarjeta.save()
     res.status(201).redirect('/dashboard');
@@ -32,11 +34,14 @@ res.render('pages/updateTarjeta', {tarjeta})
 
 export const updateTarjetaById = async (req,res) => {
     try {
-        const tarjeta = await Tarjeta.findByIdAndUpdate(req.params.tarjetaId, req.body, {
+        
+        const {titulo,cabecera,celular,direccion,correo,tarjetaImage} = req.body
+        const newTarjeta ={titulo,cabecera,celular,direccion,correo,tarjetaImage:req.file.path}
+        const tarjeta = await Tarjeta.findByIdAndUpdate(req.params.tarjetaId, newTarjeta, {
             new:true
         })  
         console.log(tarjeta)
-        res.render('pages/updateTarjeta', {tarjeta})
+        res.status(201).redirect('/dashboard');
     } catch (error) {
         console.log(error)
     }
