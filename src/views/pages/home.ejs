@@ -1,18 +1,35 @@
 
 
 
-<div style="background-color:#e65050; padding-bottom: 420px;">
+<div style="background-color:#e65050; padding-bottom: 450px;">
 </div>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#e65050" fill-opacity="1" d="M0,320L48,298.7C96,277,192,235,288,192C384,149,480,107,576,106.7C672,107,768,149,864,181.3C960,213,1056,235,1152,250.7C1248,267,1344,277,1392,282.7L1440,288L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#e65050" fill-opacity="1" d="M0,0L60,21.3C120,43,240,85,360,90.7C480,96,600,64,720,90.7C840,117,960,203,1080,208C1200,213,1320,139,1380,101.3L1440,64L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z"></path></svg>
+
 
 <div  class="container my-4" >
-  <div  style="margin: -500px 0px 300px 0px">
-    <h1 class="display-1 text-center"> Pagina de home</h1>
-    <p class="text-center"> Aqui puedes ver todos nuestros trabajos, si tienes alguna duda puedes contactarnos</p>
+  <div  style="margin: -520px 0px 300px 0px">
+    <h1 class="display-1 text-center" style="color: white;" > Pagina de home</h1>
+    <p class="typewrite text-center" data-period="2000" data-type='[ "Te interesa conocer nuestro trabajo?", "Alta creatividad.", "Enfocado al diseño progressive.", "Contactanos ya!" ]'>    
+    </p>
   </div>
- 
 
-  <h1> Contenido de tarjetas: </h1>
+<h1 class="text-center"> Nuestro portafolio de trabajos para ti</h1>
+  <%for(var i=0; i<tarjetas.length; i++) {%>
+  <div class="card mb-3" style="margin:50px 0px 50px 0px">
+    <img class="card-img-top img-fluid"  src="<%=tarjetas[i].tarjetaImage%>" alt="Card image cap">
+    <div class="card-body">
+      <a href="/tarjetas/<%= tarjetas[i]._id %>" target="_blank">
+      <h5 class="card-title"><%=tarjetas[i].titulo%></h5>
+      <p class="card-text"><%=tarjetas[i].correo%></p>
+      <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+    </a>
+    </div>
+  </div>
+
+  <%}%>
+
+  
+  <h1> Contenido de tarjetas: (esto es para pruebas) </h1>
  
   <table class="table">
     <thead>
@@ -40,21 +57,67 @@
       <%}%>
     </tbody>
   </table>
-  <%for(var i=0; i<tarjetas.length; i++) {%>
-  <div class="card mb-3" style="margin:50px 0px 50px 0px">
-    <img class="card-img-top img-fluid"  src="<%=tarjetas[i].tarjetaImage%>" alt="Card image cap">
-    <div class="card-body">
-      <a href="/tarjetas/<%= tarjetas[i]._id %>" target="_blank">
-      <h5 class="card-title"><%=tarjetas[i].titulo%></h5>
-      <p class="card-text"><%=tarjetas[i].correo%></p>
-      <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-    </a>
-    </div>
-  </div>
-
-  <%}%>
-
 
 </div>
 
+
+
+<script>
+  var TxtType = function(el, toRotate, period) {
+        this.toRotate = toRotate;
+        this.el = el;
+        this.loopNum = 0;
+        this.period = parseInt(period, 10) || 2000;
+        this.txt = '';
+        this.tick();
+        this.isDeleting = false;
+    };
+
+    TxtType.prototype.tick = function() {
+        var i = this.loopNum % this.toRotate.length;
+        var fullTxt = this.toRotate[i];
+
+        if (this.isDeleting) {
+        this.txt = fullTxt.substring(0, this.txt.length - 1);
+        } else {
+        this.txt = fullTxt.substring(0, this.txt.length + 1);
+        }
+
+        this.el.innerHTML = '<span class="wrap">'+this.txt+'</span>';
+
+        var that = this;
+        var delta = 200 - Math.random() * 100;
+
+        if (this.isDeleting) { delta /= 2; }
+
+        if (!this.isDeleting && this.txt === fullTxt) {
+        delta = this.period;
+        this.isDeleting = true;
+        } else if (this.isDeleting && this.txt === '') {
+        this.isDeleting = false;
+        this.loopNum++;
+        delta = 500;
+        }
+
+        setTimeout(function() {
+        that.tick();
+        }, delta);
+    };
+
+    window.onload = function() {
+        var elements = document.getElementsByClassName('typewrite');
+        for (var i=0; i<elements.length; i++) {
+            var toRotate = elements[i].getAttribute('data-type');
+            var period = elements[i].getAttribute('data-period');
+            if (toRotate) {
+              new TxtType(elements[i], JSON.parse(toRotate), period);
+            }
+        }
+        // INJECT CSS
+        var css = document.createElement("style");
+        css.type = "text/css";
+        css.innerHTML = ".typewrite > .wrap { border-right: 0.08em solid #fff}";
+        document.body.appendChild(css);
+    };
+</script>
 
