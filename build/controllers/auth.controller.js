@@ -33,7 +33,9 @@ var register = /*#__PURE__*/function () {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            res.render('pages/register');
+            res.render('pages/register', {
+              layout: 'layout'
+            });
 
           case 1:
           case "end":
@@ -56,7 +58,9 @@ var login = /*#__PURE__*/function () {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
-            res.render('pages/login');
+            res.render('pages/login', {
+              layout: 'layout'
+            });
 
           case 1:
           case "end":
@@ -144,7 +148,9 @@ var postRegister = /*#__PURE__*/function () {
             });
             console.log('saved user:' + savedUser);
             res.setHeader('set-cookie', 'token=' + token);
-            res.render('pages/login');
+            res.render('pages/login', {
+              layout: 'layout'
+            });
 
           case 28:
           case "end":

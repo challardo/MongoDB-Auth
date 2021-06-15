@@ -9,6 +9,8 @@ exports.deleteTarjetaById = exports.updateTarjetaById = exports.getTarjetaById =
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
+var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
+
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
 var _tarjetaModel = _interopRequireDefault(require("../models/tarjetaModel"));
@@ -69,6 +71,7 @@ var getTarjetas = /*#__PURE__*/function () {
             tarjetas = _context2.sent;
             //res.json(tarjetas)
             res.render('pages/home', {
+              layout: 'layout',
               tarjetas: tarjetas
             });
 
@@ -100,9 +103,10 @@ var getTarjetasAdmin = /*#__PURE__*/function () {
           case 2:
             tarjetas = _context3.sent;
             //res.json(tarjetas)
-            res.render('pages/dashboard', {
+            res.render('pages/dashboard', (0, _defineProperty2["default"])({
+              layout: 'layout',
               tarjetas: tarjetas
-            });
+            }, "tarjetas", tarjetas));
 
           case 4:
           case "end":
@@ -132,6 +136,8 @@ var getTarjetaById = /*#__PURE__*/function () {
           case 2:
             tarjeta = _context4.sent;
             res.render('pages/updateTarjeta', {
+              layout: 'layout',
+              tarjetas: tarjetas,
               tarjeta: tarjeta
             });
 
@@ -176,7 +182,9 @@ var updateTarjetaById = /*#__PURE__*/function () {
           case 5:
             tarjeta = _context5.sent;
             console.log(tarjeta);
-            res.status(201).redirect('/dashboard');
+            res.status(201).redirect('/dashboard'), {
+              layout: 'layout'
+            };
             _context5.next = 13;
             break;
 

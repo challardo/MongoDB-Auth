@@ -32,7 +32,8 @@ app.use(express.urlencoded({
 app.use(express.json());
 app.use('/', router);
 app.use(express["static"](__dirname + "public"));
-app.use('/uploads', express["static"]('uploads')); //app.use('/',tarjetasRouter);
+app.use('/uploads', express["static"]('uploads'));
+app.set('layout', 'layoutTarjeta'); //app.use('/',tarjetasRouter);
 
 app.listen(port, function () {
   console.log("servidor activo en el puerto: " + port);

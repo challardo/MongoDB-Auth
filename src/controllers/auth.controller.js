@@ -8,12 +8,12 @@ import { transporter } from '../mailer'
 const lodash = require('lodash')
 export const register = async (req,res) => {
 
-    res.render('pages/register')
+    res.render('pages/register',{layout: 'layout'})
 }
 
 export const login = async (req,res) => {
    
-    res.render('pages/login')
+    res.render('pages/login',{layout: 'layout'})
 }
 
 export const postRegister = async (req,res) => {
@@ -46,7 +46,7 @@ if(roles){
 })
 console.log('saved user:' + savedUser)
 res.setHeader('set-cookie', 'token='+token);
- res.render('pages/login')
+ res.render('pages/login',{layout: 'layout'})
 }
 
 export const postLogin = async (req,res) => {

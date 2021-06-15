@@ -52,12 +52,12 @@ router.get('/dashboard',[authJwt.verifyToken, authJwt.isAdmin ], tarjetaControll
 router.post('/dashboard',[authJwt.verifyToken, authJwt.isAdmin, upload.single('tarjetaImage') ], tarjetaController.createTarjeta)
 
 router.get('/createTarjeta',[authJwt.verifyToken, authJwt.isAdmin ], (req, res) =>{
-    res.render('pages/createTarjeta');
+    res.render('pages/createTarjeta',{layout: 'layout'});
     });
 
 router.get('/edit/:tarjetaId',[authJwt.verifyToken, authJwt.isAdmin ], async (req,res) => {
     const tarjeta = await Tarjeta.findById(req.params.tarjetaId);   
-    res.render('pages/updateTarjeta', {tarjeta})
+    res.render('pages/updateTarjeta', {layout:'layout',tarjeta})
     });
 
 router.post('/edit/:tarjetaId',[authJwt.verifyToken, authJwt.isAdmin,upload.single('tarjetaImage') ], tarjetaController.updateTarjetaById);
@@ -73,12 +73,12 @@ router.get('/logout', authController.logout_get);
 
 
 router.get('/forgotPassword', (req,res) => {
-    res.render('pages/forgotPassword')
+    res.render('pages/forgotPassword',{layout:'layout'})
 })
 router.get('/resetPassword/:resetToken', async (req,res) => {
   //  console.log("token id" +req.params.resetToken)
     const resetToken = await userModel.findOne({resetToken:req.params.resetToken});   
-    res.render('pages/resetPassword', {resetToken})
+    res.render('pages/resetPassword', {layout:'layout',resetToken})
     });
 
 
@@ -97,4 +97,16 @@ router.post('/resetPassword', authController.createNewPassword)
 //router.post('/changePassword', authController.changePassword)
 
 
+router.get('/contact', (req,res) =>{
+    res.render('pages/contact',{layout: 'layout'})
+});
+router.get('/about', (req,res) =>{
+    res.render('pages/about',{layout: 'layout'})
+});
 
+router.get('/tarjetas/:tarjetaId',async (req,res) =>{
+    const tarjeta = await Tarjeta.findById(req.params.tarjetaId); 
+ 
+    res.render('pages/tarjetas', {layout: 'layoutTarjeta', tarjeta})
+
+});
